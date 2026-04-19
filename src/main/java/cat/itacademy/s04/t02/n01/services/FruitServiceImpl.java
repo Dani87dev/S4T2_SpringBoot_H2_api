@@ -1,6 +1,7 @@
 package cat.itacademy.s04.t02.n01.services;
 
 import cat.itacademy.s04.t02.n01.dto.FruitDTO;
+import cat.itacademy.s04.t02.n01.exception.FruitNotFoundException;
 import cat.itacademy.s04.t02.n01.model.Fruit;
 import cat.itacademy.s04.t02.n01.repository.FruitRepository;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class FruitServiceImpl implements FruitService {
     @Override
     public FruitDTO getFruitById(Long id) {
         Fruit fruit = fruitRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fruit not found with id: " + id));
+                .orElseThrow(() -> new FruitNotFoundException("Fruit not found with id: " + id));
         return toDTO(fruit);
     }
 
@@ -44,7 +45,7 @@ public class FruitServiceImpl implements FruitService {
     @Override
     public FruitDTO updateFruit(Long id, FruitDTO fruitDTO) {
         Fruit fruit = fruitRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fruit not found with id: " + id));
+                .orElseThrow(() -> new FruitNotFoundException("Fruit not found with id: " + id));
         fruit.setName(fruitDTO.getName());
         fruit.setWeightInKilos(fruitDTO.getWeightInKilos());
         Fruit updated = fruitRepository.save(fruit);
@@ -54,7 +55,7 @@ public class FruitServiceImpl implements FruitService {
     @Override
     public void deleteFruit(Long id) {
         if (!fruitRepository.existsById(id)) {
-            throw new RuntimeException("Fruit not found with id: " + id);
+            throw new FruitNotFoundException("Fruit not found with id: " + id);
         }
         fruitRepository.deleteById(id);
     }
